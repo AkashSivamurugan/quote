@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation Page</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+  <div class="container"> <!-- Header Section --> <div class="header"> 
+    <h1>Quotation</h1> <span class="subtitle" onclick="showSubtitleInput()">+ Add Sub Title 🧾</span>
+     <div id="subtitleInputContainer" style="display: none;"> 
+      <input type="text" id="subtitleInput" placeholder="Enter subtitle here">
+     <button onclick="saveSubtitle()">Save</button>
+     </div> 
+    </div>
+    
+    <!-- Form Section -->
+    <form action="create_quotation.php" method="POST" enctype="multipart/form-data">
+      <div class="form-section">
+        <div class="form-group">
+          <label for="quotationNo">Quotation No*</label>
+          <input type="text" id="quotationNo" name="quotationNo" value="A00001" required />
+        </div>
+        <div class="form-group">
+          <label for="quotationDate">Quotation Date*</label>
+          <input type="date" id="quotationDate" name="quotationDate" value="2024-11-24" required />
+        </div>
+        <div class="form-group">
+          <label for="validTillDate">Valid Till Date</label>
+          <input type="date" id="validTillDate" name="validTillDate" value="2024-12-09" />
+        </div>
+      </div>
+      <div class="details-section">
+        <div class="details-card">
+          <h3>Quotation From <span>(Your Details)</span></h3>
+          <div class="form-group">
+            <label for="businessName">Business Name</label>
+            <input type="text" id="businessName" name="businessName" value="Akash" />
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" value="India" />
+          </div>
+        </div>
+        
+        <div class="details-card">
+          <h3>Quotation For <span>(Client's Details)</span></h3>
+          <div class="form-group">
+            <label for="clientName">Client Name</label>
+            <input type="text" id="clientName" name="clientName" placeholder="Enter Client Name" />
+          </div>
+          <div class="form-group">
+            <label for="clientAddress">Client Address</label>
+            <input type="text" id="clientAddress" name="clientAddress" placeholder="Enter Client Address" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- Table Section -->
+      <div class="table-section">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="itemRows">
+            <tr>
+              <td><input type="text" name="items[]" value="Name/SKU Id (Required)" required></td>
+              <td><input type="number" name="quantity[]" value="1" required></td>
+              <td><input type="text" name="rate[]" value="₹1" required></td>
+              <td><input type="text" name="amount[]" value="₹1.00" required></td>
+              <td><button type="button" onclick="removeRow(this)">X</button></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4"><button type="button" onclick="addRow()">Add Description</button></td>
+              <td><button type="button" onclick="addRow()">Add Thumbnail</button></td>
+            </tr>
+            <tr>
+              <td colspan="4"><button type="button" onclick="addRow()">Add Unit</button></td>
+              <td><select name="unit"><option>Product</option></select></td>
+            </tr>
+            <tr>
+              <td colspan="4"><button type="button" onclick="addRow()">Duplicate</button></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      
+      <!-- Upload Logo Section -->
+      <div class="upload-logo">
+        <p>Add Business Logo<br />Resolution up to 1080x1080px.<br />PNG or JPEG file.</p>
+        <input type="file" name="logo" accept="image/png, image/jpeg">
+      </div>
+
+      <!-- Additional Options Section -->
+      <div class="section">
+        <h2>Additional Options</h2>
+        <div class="option-group">
+          <button type="button" class="add-button">+ Add New Line</button>
+          <button type="button" class="add-button">+ Add New Group</button>
+        </div>
+        <div class="option-group">
+          <button type="button" class="add-button">Add Discounts/Additional Charges</button>
+          <button type="button" class="add-button">Hide Totals</button>
+          <input type="checkbox" id="summarize-total-quantity" name="summarize_total_quantity">
+          <label for="summarize-total-quantity">Summarize Total Quantity</label>
+        </div>
+        <div class="total-section">
+          <label>Total (INR)</label>
+          <input type="text" name="total" value="₹1.00" readonly>
+        </div>
+        <div class="option-group">
+          <button type="button" class="add-button">+ Add More Fields</button>
+          <button type="button" class="add-button">Show Total In Words</button>
+        </div>
+        <div class="option-group">
+          <button type="button" class="add-button">Add Signature</button>
+        </div>
+      </div>
+
+      <!-- Additional Information Section -->
+      <div class="section">
+        <h2>Additional Information</h2>
+        <div class="option-group">
+          <button type="button" class="add-button">+ Add Terms & Conditions</button>
+          <button type="button" class="add-button">+ Add Notes</button>
+          <button type="button" class="add-button">+ Add Attachments</button>
+        </div>
+        <div class="option-group">
+          <button type="button" class="add-button">+ Add Additional Info</button>
+          <button type="button" class="add-button">+ Add Contact Details</button>
+        </div>
+      </div>
+
+      <!-- Advance Options Section -->
+      <div class="advance-options">
+        <h2>Advance Options</h2>
+        <div class="option">
+          <label for="display-unit">Display Unit as</label>
+          <select id="display-unit" name="display_unit">
+            <option value="merge">Merge with Quantity</option>
+          </select>
+        </div>
+        <div class="option">
+          <label for="tax-summary">Show Tax Summary in Invoice</label>
+          <select id="tax-summary" name="tax_summary">
+            <option value="none">Do not show</option>
+          </select>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="hide-place-of-supply" name="hide_place_of_supply" checked>
+          <label for="hide-place-of-supply">Hide Place Of Supply/Country Of Supply</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="add-original-images" name="add_original_images">
+          <label for="add-original-images">Add Original Images in Line Items</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="thumbnail-images" name="thumbnail_images">
+          <label for="thumbnail-images">Thumbnail images in a separate column</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="show-full-description" name="show_full_description">
+          <label for="show-full-description">Show description in full width</label>
+        </div>
+        <div class="button-group">
+          <button class="save-as-draft" type="submit">Save As Draft</button>
+          <button class="save-continue" type="submit">Save & Continue</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+
+    function showSubtitleInput() {
+        document.getElementById('subtitleInputContainer').style.display = 'block';
+    }
+
+    function saveSubtitle() {
+        const subtitle = document.getElementById('subtitleInput').value;
+        const subtitleElement = document.querySelector('.subtitle');
+        subtitleElement.innerText = subtitle;
+        document.getElementById('subtitleInputContainer').style.display = 'none';
+    }
+
+    function addRow() {
+        const itemRows = document.getElementById('itemRows');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td><input type="text" name="items[]" placeholder="Item Name/ID" required></td>
+            <td><input type="number" name="quantity[]" placeholder="1" required></td>
+            <td><input type="text" name="rate[]" placeholder="₹0.00" required></td>
+            <td><input type="text" name="amount[]" placeholder="₹0.00" required></td>
+            <td><button type="button" onclick="removeRow(this)">X</button></td>
+        `;
+        itemRows.appendChild(newRow);
+    }
+
+    function removeRow(button) {
+        button.closest('tr').remove();
+    }
+</script>
+
+
+</body
